@@ -4,7 +4,7 @@ fan_configuration = "pull"
 cpu_loads = [0, 25, 50, 75, 100]
 duration_per_load = 60
 
-with open(f"{fan_configuration}.csv", "w") as f:
+with open(f"{fan_configuration}.csv", "w", buffering=1) as f:
     f.write("load,tempC\n")
 
     for load in cpu_loads:
