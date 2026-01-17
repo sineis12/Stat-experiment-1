@@ -1,4 +1,3 @@
-import time
 import subprocess as sp
 
 fan_configuration = "pull"
