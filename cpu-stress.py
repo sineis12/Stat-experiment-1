@@ -1,22 +1,18 @@
 import subprocess as sp
 
 fan_configuration = "pull"
-cpu_loads = [0, 25, 50, 75, 100]
-duration_per_load = 60
+cpu_loads = [100]
+duration_per_load = 80
 
-with open(f"{fan_configuration}.csv", "w", buffering=1) as f:
-    f.write("load(%),temp(C)\n")
+for load in cpu_loads:
+    # record temp before stress test
+    temp = int(sp.run(["cat", "/sys/class/thermal/thermal_zone0/temp"], capture_output=True, text=True).stdout.strip()) / 1000
+    print(temp)
 
-    for load in cpu_loads:
+    # turns on stress test and waits
+    stress_process = sp.Popen(["stress-ng", "-q", "--cpu", "4", "--cpu-load", str(load), "--timeout", str(duration_per_load)])
+    stress_process.wait()
 
-        # record temp before stress test
-        temp = int(sp.run(["cat", "/sys/class/thermal/thermal_zone0/temp"], capture_output=True, text=True).stdout.strip()) / 1000
-        f.write(f"{load},{temp:.1f}\n")
-
-        # turns on stress test and waits
-        stress_process = sp.Popen(["stress-ng", "--cpu", "4", "--cpu-load", str(load), "--timeout", str(duration_per_load)])
-        stress_process.wait()
-
-        # record temp again after stress test
-        temp = int(sp.run(["cat", "/sys/class/thermal/thermal_zone0/temp"], capture_output=True, text=True).stdout.strip()) / 1000
-        f.write(f"{load},{temp:.1f}\n")
+    # record temp again after stress test
+    temp = int(sp.run(["cat", "/sys/class/thermal/thermal_zone0/temp"], capture_output=True, text=True).stdout.strip()) / 1000
+    print(temp)
