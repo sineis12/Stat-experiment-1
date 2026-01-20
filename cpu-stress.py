@@ -2,7 +2,7 @@ import subprocess as sp
 
 fan_configuration = "pull"
 cpu_loads = [100]
-duration_per_load = 80
+duration_per_load = 120
 
 for load in cpu_loads:
     # record temp before stress test
