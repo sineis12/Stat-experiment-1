@@ -17,6 +17,7 @@ def read_cpu_temp():
 #timer
 
 while uptime_minutes() < timer_minutes:
+    print("waiting for " + (timer_minutes - uptime_minutes) + "minutes")
     time.sleep(5)
 
 #actual experiment
